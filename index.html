@@ -28,7 +28,6 @@
     #outcome {
       font-size: 3rem;
     }
-
   </style>
 </head>
 
@@ -73,10 +72,10 @@
     // ❗ Debug properly using the Console
 
     // 👉 CHALLENGE 1
-    function profileActivation() {
+    function profileActivation(profile, reason) {
       // 🧠 profileActivation takes two arguments, profile and reason, which are an object and a string respectively
       //  The reason arg is only used -and therefore required- to deactivate profiles, not to activate them
-      //  The profile arg has an `active` property holding a Boolean value
+      //  The profile arg has an `active` property holding a Boolean value  
       //    * If profile is active, profileActivation deactivates it and writes a `reason` prop holding the reason
       //    * If profile is inactive, profileActivation activates it and deletes the `reason` prop from the object
       //    * In both cases the updated profile object is returned
@@ -85,10 +84,39 @@
       //    * If the profile is active but it has a `reason` prop, return the string "confirm status manually"
       //    * If the profile is **missing** an `active` prop, return the string "impossible to ascertain status"
       // 🌟 HINT: to confirm the existence of a prop, check that its value is not undefined
+
+
+
+      if (profile.active === undefined) {
+        return "impossible to ascertain status"
+      }
+
+      if (profile.active === true && reason === undefined) {
+        return "confirm status manually"
+      }
+
+      if (profile.active === true) {
+        profile.active = false
+        profile.reason = reason
+        return profile
+      }
+
+      if (profile.active === false && profile.reason === undefined) {
+        return "confirm status manually"
+      }
+      if (profile.active === false) { 
+        profile.active = true
+        delete profile.reason
+        return profile
+      }
+
     }
 
+  
+
+
     // 👉 CHALLENGE 2
-    function mineSweeper() {
+    function mineSweeper(grid, x, y) {
       // 🧠 mineSweeper takes a grid as its first argument, and coordinates x and y as the second and third args
       //  The grid is an array of arrays in the following format: [["🟥","🟦","🟥"],["🟦","🟥","🟥"],["🟥","🟦","🟦"]]
       //  Each subarray is a row of the grid, the first subarray being the top row:
@@ -106,10 +134,26 @@
       //    * If the player lands on blue, return the string "🟦 🥳"
       // 🧠 Edge cases:
       //    * If the x or y coordinates are under 1 or over 3, return the string "invalid coordinates"
+
+      if (x < 1 || x > 3 || y < 1 || y > 3) {
+        return "invalid coordinates"
+      }
+
+      let target = grid[y - 1][x - 1]
+
+      if (target === "🟦") {
+        return "🟦 🥳"
+      }
+      if (target === "🟥") {
+        return "🟥 💀"
+      }
+
+
     }
 
+
     // 👉 CHALLENGE 3
-    function booleanize() {
+    function booleanize(obj) {
       // 🧠 booleanize takes an object as its single argument, which can have any number of properties
       // Loop over the properties and then return the object, after applying the following transformations:
       //    * If a value is the number zero, it must be transformed into the Boolean false
@@ -118,10 +162,30 @@
       // 🧠 Edge cases:
       //    * If a property name exceeds 9 characters, return the string "shorten all prop names to 9 chars or less"
       // 🌟 HINT: careful not to perform any unintended changes on the object
+     
+     
+      for (let myProp in obj) {
+        if (obj[myProp] === null) {
+          delete obj[myProp]
+        }
+        if (obj[myProp] === 1) {
+          obj[myProp] = true
+        }
+        if (myProp.length > 9) {
+          return "shorten all prop names to 9 chars or less"
+        }
+        if (obj[myProp] === 0) {
+          obj[myProp] = false
+        }
+      }
+
+      return obj
+
     }
 
+
     // 👉 CHALLENGE 4
-    function scrub() {
+    function scrub(str, arry) {
       // 🧠 scrub takes a string "text" as its first argument, and an array of forbidden words "forbidden" as its second
       // Any word in the text included in the array of forbidden words is replaced with a word of equal length but made of lowcase "x"
       // The scrubbed text is then returned from the function, as seen in the examples below
@@ -133,10 +197,26 @@
       //    scrub("aces high", ["high", "aces", "hearts"]) // returns "xxxx xxxx"
       //    scrub("", ["high", "aces""]) // returns ""
       // 🌟 HINT: useful array methods to use are `push`, `indexOf`, `split`, `join`
-    }
+      // console.log(arry)
 
+
+      let splitString = str.split(' ')
+
+      for (let idx = 0; idx < splitString.length; idx++) {
+
+        let char = splitString[idx]
+
+        if (arry.indexOf(char) !== -1) {
+          splitString[idx] = "x".repeat(char.length)
+        }
+
+      }
+      let forbiddenWord = splitString.join(' ')
+      return forbiddenWord
+
+    }
     // 👉 CHALLENGE 5
-    function normalizePhoneNumber() {
+    function normalizePhoneNumber(phoneNum) {
       // 🧠 normalizePhoneNumber takes a string as its only argument, representing a ten-digit number
       // The function returns a string formatted as seen below
       // 🧠 Examples of usage:
@@ -148,17 +228,53 @@
       // 🌟 HINT: instead of looping over the number's digits, loop backwards over a template "(XXX) XXX-XXXX"
       // 🌟 HINT: at each iteration, if the current character is an "X", replace it with the result of popping a digit from the number
       // 🌟 HINT: if you'd rather loop forwards, use `shift` instead of `pop`
+
+
+      let numberString = Number(phoneNum)
+
+      if (phoneNum.length > 10 || phoneNum.length < 10) {
+        return "type a 10-digit number"
+      }
+
+      if (numberString) {
+        return `(${phoneNum.slice(0, 3)}) ${phoneNum.slice(3, 6)}-${phoneNum.slice(6,)}`
+      }
+
+      if (isNaN(numberString)) {
+        return "invalid phone number"
+      }
     }
 
+
+
+
     // 👉 CHALLENGE 6 (bonus, NOT graded)
-    function diceRolls() {
+    function diceRolls(test) {
       // 🧠 diceRolls takes no arguments and returns a number
       // The function throws a six-sided dice until 3 sixes in a row are obtained
       // The number of throws it took to obtain that third-in-a-row six is then returned from the function
       // 🌟 HINT: research using `Math.random` to obtain a number from 1 to 6
       // 🌟 HINT: use `while(true)` to throw the dice indefinitely, but avoid an infinite loop by making sure to break out eventually
       // 🌟 HINT: you need to keep track of the total number of throws, as well as how many sixes in a row
+
+      //       test = 'string'
+      //       console.log(test)
+
+      //       randomNum = Math.floor(Math.random() * 6) + 1
+      //       // console.log(randomNum)
+      //       let idx = 0
+      //       while (true) {
+      //         if (randomNum === 6) {
+      //           console.log(randomNum)
+      //           // return "this is a 6 sided dice"
+      //         }
+      //         idx++
+
+      //       }
+      //       return Number
+
     }
+
 
     // 🧪 TESTS, do not make any changes below this line ===================
     // 🧪 TESTS, do not make any changes below this line ===================
